@@ -401,7 +401,7 @@ In this case, Unity packed the meshes too tightly in the lightmap, which resulte
 
 You can make the reflections in the mirror more realistic even when the mirror isn't active, by enabling Box projection on individual reflection probes and then tweaking the box size and offset until it looks passable.
 
-![box projection](https://i.imgur.com/1uYziE8.gif)
+![box projection](https://thumbs.gfycat.com/UnpleasantAromaticFlies-size_restricted.gif)
 
 ## Readying the world for VRChat
 
