@@ -15,9 +15,9 @@ A somewhat complete guide for creating your very own room for VRChat
   - [Setting up materials](#setting-up-materials)
   - [Lighting](#lighting)
     - [Night lighting (Skybox)](#night-lighting-skybox)
+    - [Reflection probes](#reflection-probes)
     - [Light probes](#light-probes)
     - [Final touches to lighting](#final-touches-to-lighting)
-    - [Reflection probe box projection](#reflection-probe-box-projection)
 - [Readying the world for VRChat](#readying-the-world-for-vrchat)
   - [Scene descriptor & setting up layers](#scene-descriptor--setting-up-layers)
   - [Collisions](#collisions)
@@ -349,9 +349,18 @@ People looking at themselves in the mirror would like to be able to see themselv
 
 ![area light](https://i.imgur.com/4yByPBW.png)
 
+#### Reflection probes
+
 Our room is L-shaped, so we can have three reflection probes to up the accuracy of the reflections a bit.
 
 ![three probes](https://i.imgur.com/vZvNsxE.png)
+
+You'll also want to adjust the bounding box for the reflection probes, to control their area of influence. Shiny objects inside the box will use that probe's reflections. Where boxes overlap, shiny objects will fade between multiple probes depending on proximity. Smaller overlap is better than a big overlap, as a big overlap will cause reflections to look "duplicated".
+
+Another fun feature with reflection probes is "Box projection". Tick this to have reflections appear like a box sized like the bounding box (usually it's a good idea to fit this box to a room). Reflections in mirrors will look dramatically more realistic without actually being real mirrors. Box projection can be useful in indoor areas, as the reflections of a shiny object will change based on the object's position inside the room.
+
+![box projection](https://thumbs.gfycat.com/UnpleasantAromaticFlies-size_restricted.gif)
+
 
 #### Light probes
 
@@ -397,12 +406,6 @@ In this case, Unity packed the meshes too tightly in the lightmap, which resulte
 
 ![increase margin](https://i.imgur.com/ZdX2CpP.png)
 ![bleed gone](https://i.imgur.com/y6hjWzz.png)
-
-#### Reflection probe box projection
-
-You can make the reflections in the mirror more realistic even when the mirror isn't active, by enabling Box projection on individual reflection probes and then tweaking the box size and offset until it looks passable.
-
-![box projection](https://thumbs.gfycat.com/UnpleasantAromaticFlies-size_restricted.gif)
 
 ## Readying the world for VRChat
 
