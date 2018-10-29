@@ -325,9 +325,10 @@ The world already looks good for a daytime scene, but in this tutorial we will g
 1. Drag `night_mountains.png` into the Texture folder
 2. Set the Texture Shape to "Cube" and hit Apply
 3. Create a new material in the Material folder, name it something like "night sky"
-4. Drag the night_mountains.png into the Cubemap slot
-5. Drag the skybox material into "Skybox Material" in the Lighting panel, Unity will rebake the light
-6. Adjust the parameters of the Directional light so it fits with a night sky
+4. Select Skybox -> Cubemap from the Shader dropdown in the material
+5. Drag the night_mountains.png into the Cubemap slot
+6. Drag the skybox material into "Skybox Material" in the Lighting panel, Unity will rebake the light
+7. Adjust the parameters of the Directional light so it fits with a night sky
    - rotate the light itself to control where the light shines into the room
    - simulate moonlight by setting the color to a light blue-purple-ish
    - reduce the indirect multiplier a bit in case the room gets too illuminated
