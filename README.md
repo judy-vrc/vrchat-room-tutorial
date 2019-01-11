@@ -495,6 +495,41 @@ It would be nice to double check that our mirrors are working as expected, witho
 
 ![mirror demo](https://thumbs.gfycat.com/SecondhandSnoopyHarborseal-size_restricted.gif)
 
+### Chairs
+
+We put some chairs in the room, but we can't actually sit down on them yet (unless you have the $300* DLC that is full-body tracking), we first have to add some *stations* to them.
+<sub>*: also comes in cheaper variants</sub>
+
+We can drag in the VRCChair prefab and study the contents to figure out what an interactive chair needs:
+- **Enter Point**: a transform dictating the position of the seated player. Z (blue) arrow is the direction the player is facing and X (red) points horizontally to the player's right.
+  - Note that when this position is at floor level, that means the avatar's feet will reach the floor, regardless of avatar size. This is the reason why small avatars will clip through regular chairs.
+- **Exit Point**: a transform dictating where the player will appear when exiting the chair. Z (blue) arrow is the direction the player will be facing and X (red) points horizontally to the player's right.
+  - This transform is a bit above floor level on the default prefab
+  - For moving (e.g. grabbable) chairs we'd want to set Player Mobility to `Immobilize for vehicle`
+
+We can replicate the setup for our own (static) chair, but first we will add a box collider and check the `Is Trigger` box. We add two child transforms to the chair; an enter (and sitting) and (optionally) an exit transform.
+
+![chair transforms](https://i.imgur.com/CsuO2Za.png)
+![chair settings](https://i.imgur.com/l3ubZGF.png)
+
+You can customize how a player looks when seated by putting an animation controller (that points to a specific animation clip) into the Animation Controller slot, but keep in mind VR players will still have control over their arms, and full body tracking players will have control over their entire body. If this slot is empty, the default sitting animation plays. 
+
+If you uncheck `Seated`, the player will appear standing instead, and **get stuck in place** when exiting (!). If you uncheck `Seated` and include an animation controller, the player will **T-pose upon exit** (!). For now (Jan 11 2019) this appears to be a bug on VRChat's side, so keep `Seated` checked until this is fixed.
+
+- Play around a bit with the enter transform and animations until players properly sit on chairs. (this also depends on avatar size)
+
+![whoops](https://i.imgur.com/z0HLoOt.jpg)
+
+#### Grabbable chairs
+
+If you want to be able to pick up a chair, keep in mind that both the station and pickup script use box collider triggers. You might want to have two non-overlapping box triggers on the chair (one for entering the seat, one for picking it up), or use triggers to disable/enable one or the other when a player enters/exits the seat. If you don't disable the pickup for the player sitting in the chair, they will be able to grab the chair and potentially **fling themselves so far out of the world that all the geometry breaks down** and they won't be able to use the menu. Here's an example of what that looks like (note the HUD icons): 
+
+![fling](https://giant.gfycat.com/MisguidedFrequentBoubou.gif)
+
+#### Prefabs
+
+Now that we've made a chair, we can make a prefab out of it. This is as simple as just dragging the object from the hierarchy into a folder in the project explorer. Now we can create new chairs easily by just dragging that prefab into the viewport directly, and placing it on the floor somewhere. Prefabs are great when you're working in unity; you can create a prop with some triggers and stuff, and then make a prefab so you can spawn as many as you want.
+
 ## Uploading the world
 
 You're probably eager to invite all your friends to your cozy room, and to do that we'll have to upload the world to VRChat. In the build control panel you can find similar buttons under Publish as under Test. "Last Build" will upload the last build of the world (useful in case you just finished a testing session and want to upload right away), or uploading a new build.
