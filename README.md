@@ -27,8 +27,6 @@ A somewhat complete guide for creating your very own room for VRChat
   - [Mirror](#mirror)
     - [Mirror button triggers](#mirror-button-triggers)
     - [Testing multiple clients locally](#testing-multiple-clients-locally)
-  - [(Grabbable) Chairs](#grabbable-chairs)
-    - [Chair Prefabs](#chair-prefabs)
 - [Uploading the world](#uploading-the-world)
 - [A word on optimization](#a-word-on-optimization)
 - [Replacing a mesh with an updated version](#replacing-a-mesh-with-an-updated-version)
@@ -494,40 +492,6 @@ Time to make the mirror into an actual mirror. We will make two different mirror
 It would be nice to double check that our mirrors are working as expected, without having to upload the world and have a friend come check it out. That's what the "Number of Clients" field is for in the Test category of the build panel. Set that to 2 and two vrchat windows will load up. Your clone will be displayed as a blue loading avatar (anything else would've caused a paradox)
 
 ![mirror demo](https://thumbs.gfycat.com/SecondhandSnoopyHarborseal-size_restricted.gif)
-
-### (Grabbable) Chairs
-
-We put some chairs in the room, but we can't actually sit down on them yet (unless you have the $300* DLC that is full-body tracking), we first have to add some *stations* to them.
-
-<sub>*: also comes in cheaper variants</sub>
-
-We can drag in the VRCChair prefab and study the contents to figure out what an interactive chair needs:
-
-- **Enter Point**: a transform dictating the position of the seated player. Z (blue) arrow is the direction the player is facing and X (red) points horizontally to the player's right.
-  - Note that when this position is at floor level, that means the avatar's feet will reach the floor, regardless of avatar size. This is the reason why small avatars will clip through regular chairs.
-- **Use Text Point**: a transform where the tooltip text will be shown
-- **Exit Point**: a transform dictating where the player will appear when exiting the chair. Z (blue) arrow is the direction the player will be facing and X (red) points horizontally to the player's right.
-  - This transform is a bit above floor level on the default prefab
-- **VRC_Station**: the script that configures how the chair should behave
-  - For moving (e.g. grabbable) chairs we'd want to set Player Mobility to `Immobilize for vehicle`
-- **VRC_Trigger**: An `OnInteract` `AlwaysBufferOne` trigger that sends a `UseStation` RPC to itself when pressed.
-
-We can replicate the setup for our own chair, but first we should add a child object of the Chair and add a box collider to it. We'll add the station script and trigger to this child object, so as not to interfere with the physical chair object.
-
-- We'd end up grabbing the chair as we sit down and flinging ourselves into the ether if they were on the same object
-- Make the box collider a bit fat so it is easier to interact with trough the box colliders of the chair
-- You can also put the station script on the chair itself, and have only the trigger and collider on the the child
-
-![chairsettings](https://i.imgur.com/moCCUBl.png)
-![chairs](https://i.imgur.com/e8Lnfwd.jpg)
-
-#### Chair Prefabs
-
-Now that we've made a grabbable chair, we can make a prefab out of it. This is as simple as just dragging the object from the hierarchy into a folder in the project explorer. Now we can create new grabbable chairs easily by just dragging that prefab into the viewport directly, and placing it on the floor somewhere.
-
-- You might need to adjust the scale of the chair (or switch to a smaller/larger avatar) to avoid sitting in the air or inside the chair...
-
-![whoops](https://i.imgur.com/z0HLoOt.jpg)
 
 ## Uploading the world
 
