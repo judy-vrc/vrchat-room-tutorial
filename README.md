@@ -31,6 +31,8 @@ A somewhat complete guide for creating your very own room for VRChat
 - [A word on optimization](#a-word-on-optimization)
 - [Replacing a mesh with an updated version](#replacing-a-mesh-with-an-updated-version)
 - [Conclusion](#conclusion)
+- [Multiple rooms](#multiple-rooms)
+  - [Occlusion culling](#occlusion-culling)
 
 ## Introduction
 
@@ -509,7 +511,7 @@ You're probably eager to invite all your friends to your cozy room, and to do th
 
 ## A word on optimization
 
-Our world is fairly small, so we've mostly optimized what could be optimized so far. We've kept the number of meshes low, which isn't always a good thing when it comes to worlds. For larger worlds, like houses with many different rooms, we'll want to use occlusion culling to avoid having to render other rooms we cannot see. Occlusion culling works by not rendering meshes that are hidden, and thus it benefits from a scene that is divided into smaller meshes rather than the entire house being one single monolithic mesh. Our world is just one room, so we can safely keep the walls, floor and ceiling as one mesh.
+Our world is fairly small, so we've mostly optimized what could be optimized so far. We've kept the number of meshes low, which isn't always a good thing when it comes to worlds. For larger worlds, like houses with many different rooms, we'll want to use occlusion culling to avoid having to render other rooms we cannot see. Occlusion culling works by not rendering meshes that are hidden, and thus it benefits from a scene that is divided into smaller meshes rather than the entire house being one single monolithic mesh. Our world is just one room, so we can safely keep the walls, floor and ceiling as one mesh. For more info, read [Multiple rooms](#multiple-rooms) below.
 
 ## Replacing a mesh with an updated version
 
@@ -550,3 +552,48 @@ Say you're tired of the back wall being so bland, and you'd like to knock down a
 That's that, then. You should now know enough to create at least a cozy little place for yourself and your friends. When you're ready for your world to go public, you can fill in the form (all relevant info about the public world process can be found on the [VRChat discord](https://discord.gg/vrchat)).
 
 VRChat is a place for exploring, hanging out and having fun. Happy world building!
+
+## Multiple rooms
+
+As mentioned in [A word on optimization](#a-word-on-optimization) above, you should ideally have more than just one mesh in the world. This is not just for occlusion culling purposes, it is also important for getting reflections to look right, and separate meshes are also easier to work with in Blender, as you can move (and rotate, scale, duplicate and so on) entire rooms around when they are their own mesh/object instead of just a part of a bigger mesh.
+
+Consider a building consisting of two floors with multiple rooms, with a box-projected reflection probe in each room. If the entire thing is just one mesh, the result looks like this:
+
+![ew reflection bleed](https://i.imgur.com/huHVPa2.png)
+
+Notice how the reflections are "bleeding in", most noticeable on the 2nd floor.
+If we take a peek in the Lighting category of the mesh renderer, we'll see that not all of the reflection probes are even used! 
+
+![not all reflections used](https://i.imgur.com/SQfVd6d.png)
+
+When mesh renderers are set to `Blend Probes`, that's exactly what they do; they blend between different reflection probes if more than one exist, based on their bounding boxes and the bounding box of the mesh itself. Since our two lower rooms have considerably smaller bounding boxes, it turns out the mesh just ignores them completely. To fix this issue, we go in Blender and open the mesh in edit mode, select all faces that correspond to one room (for doorframes you can optionally add an edge loop in the middle, or just choose if it should be connected to either one of the rooms), and hit `P (Separate) -> Selection`. Remember to name the new meshes accordingly.
+
+![mesh split](https://i.imgur.com/sBagyYq.png)
+
+![mesh splitted](https://i.imgur.com/MZvkqPt.png)
+
+The result of splitting the meshes look like this. Notice how the reflections are much more accurate.
+
+![seams](https://i.imgur.com/iv1OWTq.png)
+
+Splitting the floor does result in the opposite issue, though, where you can see the "seam" between different meshes because of the different reflections. This isn't usually an issue though, as you can just add a doorframe, which also makes the room more realistic in the process.
+
+### Occlusion culling
+
+By default, unity renders everything that's in view of the camera, and culls whatever falls outside the camera frustrum. This can lead to some wasteful rendering if objects are hidden behind something but get rendered anyways. This is the idea of occlusion culling; culling the occluded objects. Go ahead and open the Occlusion panel from `Window -> Occlusion Culling`. We will "bake" occlusion culling data but if we also want dynamic objects to be culled (avatars, props, etc.) we'll need to add one or more Occlusion Areas, which you can add from the newly opened panel. In this case, the world is fairly cubical so we can just use one volume. The idea is that a dynamic object will only be checked for occlusion when it is inside one of the occlusion areas, so make sure you cover everywhere that dynamic objects can go.
+
+![occlusion area](https://i.imgur.com/5XAPvvC.png)
+
+Now go to the Bake category, and hit Bake with the default parameters. Now you can visualize the occlusion culling by going to Visualization, then selecting your main camera, and moving it around the scene. Try to see if objects get occluded properly. You could add some spheres to simulate props/players, and see if they stop rendering when there's a wall between them and the camera. 
+
+If this doesn't happen, tweak the parameters! For instance, this how the following parameters perform on the example room:
+
+- Smallest Occluder: 1 (so the walls next to the doorways on the bottom floor will occlude)
+- Smallest Hole: 0.05 (half the thickness of the walls)
+- Backface Threshold: 100 (default)
+
+![occlusion visualization](https://giant.gfycat.com/VengefulHeavenlyIcterinewarbler.gif)
+
+Sometimes the occlusion culling will be too aggressive, and cull objects that should be in full view. This is very startling in-game, so make sure you tweak the parameters and test your world thourougly. It is better to have some objects rendered wastefully than to cull too much.
+
+Don't worry too much about occlusion culling - it is usually smart enough to cull things a greater distance away or if you have thicker walls.
