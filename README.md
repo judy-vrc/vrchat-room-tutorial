@@ -312,9 +312,17 @@ Alright, our materials are in place, but the room looks pretty awful - sun is sh
   - Final Gather leads to more accurate results but longer bake times.
   - Right now Unity is baking the light automatically each time something lighting-related (or the position of a static object) changes, which is fine for our small scene, but in larger worlds this can take several minutes. If you want to bake the lighting on your own volition, uncheck "Auto Generate" at the bottom of the lighting panel.
 
-7. You'll notice that some materials "reflect" the skybox, or look overly matte. Since we don't have any reflection probes (often called cubemaps) in the room, they can only reflect the skybox. Right click the parent object (world_tutorial in our case) and add a `Light -> Reflection Probe`. Position it somewhat in the middle of the room, and you should see the materials soon turn a lot more realistic.
+#### Reflection probes
 
-![reflection probe](https://i.imgur.com/KVBC9ao.png)
+7. You'll notice that some materials "reflect" the skybox, or look overly matte. Since we don't have any reflection probes (often called cubemaps) in the room, they can only reflect the skybox. Right click the parent object (world_tutorial in our case) and add a `Light -> Reflection Probe`. Position it somewhat in the middle of the room, and you should see the materials soon turn a lot more realistic. For bonus points, check `Box Projection` and click the `Edit Bounding Volume` button in the inspector, and fit the box to the room like so:
+
+![reflection probe box proj. first](https://i.imgur.com/A6QUOhc.png)
+
+This box is also the probes' area of influence. Shiny objects inside the box will use this probe's reflections. Where boxes overlap, shiny objects will fade between multiple probes depending on proximity. Smaller overlap is better than a big overlap, as a big overlap will cause reflections to look "duplicated" more often. In our case, we only have one probe, so we won't have that issue.
+
+Box projection lends itself really well for rectangular rooms, as you get very convincing reflections from only a single reflection probe! Reflections of shiny objects will also change based on the object's position inside the room.
+
+![reflection probe box projection mirror](https://giant.gfycat.com/BigRemarkableAcornweevil.gif)
 
 8. Our room is still pretty dark, even though it has four windows and the sky is bright outside. You can tweak the environment lighting in the Lighting panel with the Intensity Multiplier slider. Set it to 2 for instance, and observe that the room becomes a bit brighter.
 9. You can also adjust the intensity of the sun (Directional Light) as well as its Indirect Multiplier. You can keep the intensity at 1 while sliding the indirect up, if you want more light to bounce into the room while keeping the light spots on the floor from going nuclear. Here's an example of the environment indirect set to 2 and the sun's indirect set to 10
@@ -352,20 +360,9 @@ People looking at themselves in the mirror would like to be able to see themselv
 
 ![area light](https://i.imgur.com/4yByPBW.png)
 
-#### Reflection probes
-
-Our room is L-shaped, so we can have three reflection probes to up the accuracy of the reflections a bit.
-
-![three probes](https://i.imgur.com/vZvNsxE.png)
-
-You'll also want to adjust the bounding box for the reflection probes, to control their area of influence. Shiny objects inside the box will use that probe's reflections. Where boxes overlap, shiny objects will fade between multiple probes depending on proximity. Smaller overlap is better than a big overlap, as a big overlap will cause reflections to look "duplicated".
-
-Another fun feature with reflection probes is "Box projection". Tick this to have reflections appear like a box sized like the bounding box (usually it's a good idea to fit this box to a room). Reflections in mirrors will look dramatically more realistic without actually being real mirrors. Box projection can be useful in indoor areas, as the reflections of a shiny object will change based on the object's position inside the room.
-
-![box projection](https://thumbs.gfycat.com/UnpleasantAromaticFlies-size_restricted.gif)
-
-
 #### Light probes
+
+(*update: don't mind the three reflection probes in the screenshots, we still have our one box projected one*)
 
 Our lighting looks pretty cozy already, but there is one more important step we need to do. Remember how baked lighting only affects static objects? We can place some spheres down to see how a dynamic object would look in this room.
 
