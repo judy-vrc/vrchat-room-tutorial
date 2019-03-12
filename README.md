@@ -273,7 +273,7 @@ With our room furnished and pretty, it is time to get it working it Unity. We wi
 
 ## Setting up the world (Unity)
 
-If you've ever uploaded your own avatar, that means you probably have the [right version of Unity already installed](https://beta.unity3d.com/download/9c92e827232b/Windows64EditorInstaller/UnitySetup64-5.6.3p1.exe). In case you haven't, you should probably do that now. To work with Unity, you need to create a new project in case you don't have one already, and then import the VRChat SDK which is fairly straightforward. Once you can see the viewport and the project explorer, you're ready to go.
+If you've ever uploaded your own avatar, that means you probably have the right version of Unity already installed. In case you haven't, you should probably do that now, so follow the steps in the [the VRChat docs](https://docs.vrchat.com/docs/setting-up-the-sdk). To work with Unity, you need to create a new project in case you don't have one already, and then import the VRChat SDK which is fairly straightforward. Once you can see the viewport and the project explorer, you're ready to go.
 
 1. Create a folder called "Assets" if you haven't already. In that folder, we can create "Models" folder, and inside that you can create a very descriptive folder like "my nice room"
 2. Drag the exported .fbx straight into the "my nice room" folder
